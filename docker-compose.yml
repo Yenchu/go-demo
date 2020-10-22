@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ~/data/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  app:
+    image: myapp
+    container_name: myapp
+    # if mysql is not ready, app would get connection refused, use restart to fix it
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      DB_IP: mysql
+      DB_PORT: 3306
+      USERNAME: root
+      PASSWORD: root
